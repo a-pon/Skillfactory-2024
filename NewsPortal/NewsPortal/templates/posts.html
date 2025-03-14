@@ -1,0 +1,39 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block head_title %}News{% endblock head_title %}
+
+{% block content %}
+    {% if posts %}
+        <h1>Список новостей ({{ posts|length }})</h1>
+        {% for post in posts %}
+            <hr>
+            <h3>{{ post.header|censor }}</h3>
+            <i>{{ post.time|date:'d.m.Y' }}</i>
+            <p>{{ post.content|truncatechars:20|censor }}</p>
+        {% endfor %}
+
+        {# Pagination #}
+        {% if page_obj.has_previous %}
+            <a href="?page=1">1</a>
+            {% if page_obj.previous_page_number != 1 %}
+                ...
+                <a href="?page={{ page_obj.previous_page_number }}">
+                    {{ page_obj.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+        {{ page_obj.number }}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">
+                {{ page_obj.next_page_number }}</a>
+            {% if paginator.num_pages != page_obj.next_page_number %}
+                ...
+                <a href="?page={{ page_obj.paginator.num_pages }}">
+                    {{ page_obj.paginator.num_pages }}</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+{% endblock content %}

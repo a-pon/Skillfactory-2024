@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ post.header }}</title>
+</head>
+<body>
+  <h2>Здравствуй, {{ subscriber }}. Новая статья в твоём любимом разделе!</h2>
+  {% if post.type == 'N' %}
+    <h3><a href="http://127.0.0.1:8000/news/{{ post.id }}">{{ post.header }}</a></h3>
+  {% endif %}
+  {% if post.type == 'A' %}
+    <h3><a href="http://127.0.0.1:8000/articles/{{ post.id }}">{{ post.header }}</a></h3>
+  {% endif %}
+  <p>{{ post.content|truncatechars:50 }}</p>
+</body>
+</html>

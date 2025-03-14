@@ -1,0 +1,44 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block head_title %}{{ category.name|upper }}{% endblock head_title %}
+{% block content %}
+  {% if page_obj %}
+    <h1>Список новостей в категории: {{ category.name|upper }}</h1>
+    {% if not_subscribed %}
+      <button><a href="/subscribe/?category_id={{ category.id }}">Подписаться</a></button>
+    {% endif %}
+    {% for post in page_obj %}
+      <hr>
+      <h3>{{ post.header|censor }}</h3>
+      <i>{{ post.time|date:'d.m.Y' }}</i>
+      <p>{{ post.content|truncatechars:20|censor }}</p>
+    {% endfor %}
+
+    {# Pagination #}
+    {% if page_obj.has_previous %}
+      <a href="?page=1">1</a>
+      {% if page_obj.previous_page_number != 1 %}
+        ...
+        <a href="?page={{ page_obj.previous_page_number }}">
+        {{ page_obj.previous_page_number }}</a>
+      {% endif %}
+    {% endif %}
+    {{ page_obj.number }}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">
+      {{ page_obj.next_page_number }}</a>
+      {% if paginator.num_pages != page_obj.next_page_number %}
+        ...
+        <a href="?page={{ page_obj.paginator.num_pages }}">
+        {{ page_obj.paginator.num_pages }}</a>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <h2>В категории {{ category.name|upper }} нет новостей!</h2>
+    {% if not_subscribed %}
+      <button><a href="/subscribe/">Подписаться</a></button>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

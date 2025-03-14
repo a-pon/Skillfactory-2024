@@ -1,0 +1,7 @@
+{% extends 'flatpages/default.html' %}
+
+{% block head_title %}Profile{% endblock head_title %}
+
+{% block content %}
+<h2>Добро пожаловать на сайт, {{ request.user.username }}!</h2>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends 'flatpages/default.html' %}
+
+{% block head_title %}Categories{% endblock head_title %}
+
+{% block content %}
+  {% if categories %}
+    <h1>Список категорий</h1>
+    <hr>
+    {% for category in categories %}
+    <h3><a href="/categories/{{ category.id }}">{{ category.name|upper }}</a></h3>
+    {% endfor %}
+  {% else %}
+    <h2>Категорий нет!</h2>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category update</title>
+</head>
+<body>
+  <h2>Здравствуй, {{ subscriber }}. Новые статьи в разделе {{ category.name|upper }}!</h2>
+  {% for post in posts %}
+    <hr>
+    {% if post.type == 'N' %}
+      <h3><a href="http://127.0.0.1:8000/news/{{ post.id }}">{{ post.header }}</a></h3>
+    {% endif %}
+    {% if post.type == 'A' %}
+      <h3><a href="http://127.0.0.1:8000/articles/{{ post.id }}">{{ post.header }}</a></h3>
+    {% endif %}
+    <p>{{ post.content|truncatechars:50 }}</p>
+  {% endfor %}
+</body>
+</html>
