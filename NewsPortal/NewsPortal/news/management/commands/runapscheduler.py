@@ -60,7 +60,9 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             category_update_job,
-            trigger=CronTrigger(second="*/10"),
+            trigger=CronTrigger(
+                day_of_week="mon", hour="10", minute="00"
+            ),
             id = "category_update_job",
             max_instances = 1,
             replace_existing = True,

@@ -5,7 +5,6 @@ from django.dispatch import receiver
 
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import redirect
 
 from .models import Post
 
