@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.core.cache import cache
 
 from .models import Author, Category, Post
 from .filters import PostFilter
@@ -40,6 +41,13 @@ class PostDetail(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
+
 
 class PostSearch(ListView):
     model = Post
@@ -64,14 +72,6 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
-
-    # def form_valid(self, form):
-    #     post = form.save(commit=False)
-    #     if self.request.path == '/news/create/':
-    #         post.type = 'N'
-    #     elif self.request.path == '/articles/create/':
-    #         post.type = 'A'
-    #     return super().form_valid(form)
 
     def post(self, request, *args, **kwargs):
         post_ = Post(

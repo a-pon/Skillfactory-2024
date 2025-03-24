@@ -103,6 +103,113 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'style' : '{',
+    'formatters': {
+        'time': {
+            # 'format': '{asctime} {levelname} {message}',
+            'format': '%(asctime)s %(levelname)s %(message)s'
+        },
+        'module': {
+            'format': '%(asctime)s %(levelname)s $(module)s %(message)s'
+        },
+        'path': {
+            'format': '%(asctime)s %(levelname)s %(message)s $(pathname)s'
+        },
+        'stack': {
+            'format': '%(asctime)s %(levelname)s %(message)s $(pathname)s $(exc_info)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'debug': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'time'
+        },
+        'warning': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'path'
+        },
+        'error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'stack'
+        },
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'formatter': 'stack'
+        },
+        'general': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'module'
+        },
+        'security': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'module'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'path'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['debug', 'warning', 'error', 'general'],
+            # 'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['errors', 'mail_admins'],
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['errors', 'mail_admins'],
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['errors'],
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['errors'],
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['security'],
+            'propagate': False,
+        },
+    },
+}
+
 WSGI_APPLICATION = 'NewsPortal.wsgi.application'
 
 
@@ -111,9 +218,13 @@ WSGI_APPLICATION = 'NewsPortal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
 
 
@@ -171,8 +282,8 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
 
 
-# APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
-# APSCHEDULER_RUN_NOW_TIMEOUT = 25
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 
 CELERY_BROKER_URL = 'redis://localhost:6379'

@@ -24,24 +24,24 @@ def limit_daily_posts(sender, instance, **kwargs):
             raise PostLimitError('Daily posts limit achieved')
 
 
-@receiver(post_save, sender=Post)
-def notify_category_subscribers(sender, instance, created, **kwargs):
-    if created:
-        instance.categories.add(instance._categories)
-        for category in instance.categories.all():
-            for subscriber in category.subscribers.all():
-                html_content = render_to_string(
-                    'post_created.html',
-                    {
-                        'post': instance,
-                        'subscriber': subscriber,
-                    }
-                )
-                msg = EmailMultiAlternatives(
-                    subject=instance.header,
-                    body=instance.content,
-                    from_email='',
-                    to=[subscriber.email],
-                )
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
+# @receiver(post_save, sender=Post)
+# def notify_category_subscribers(sender, instance, created, **kwargs):
+#     if created:
+#         instance.categories.add(instance._categories)
+#         for category in instance.categories.all():
+#             for subscriber in category.subscribers.all():
+#                 html_content = render_to_string(
+#                     'post_created.html',
+#                     {
+#                         'post': instance,
+#                         'subscriber': subscriber,
+#                     }
+#                 )
+#                 msg = EmailMultiAlternatives(
+#                     subject=instance.header,
+#                     body=instance.content,
+#                     from_email='',
+#                     to=[subscriber.email],
+#                 )
+#                 msg.attach_alternative(html_content, "text/html")
+#                 msg.send()
