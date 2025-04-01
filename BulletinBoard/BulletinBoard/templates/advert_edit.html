@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block tinymce %}{{ form.media }}{% endblock tinymce %}
+
+{% block content %}
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Сохранить">
+  </form>
+{% endblock content %}

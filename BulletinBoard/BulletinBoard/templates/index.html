@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block head_title %}Главная{% endblock head_title %}</title>
+  {% load static %}
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+  {% block tinymce %}{% endblock tinymce %}
+</head>
+<body>
+  {% block header %}
+  <!--Responsive navbar-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">Доска объявлений</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          {% if request.user.is_active %}
+            <li class="nav-item">
+              <a class="nav-link" href="/adverts/create/">Создать объявление</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/responds/">Отклики</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/accounts/logout/">Выйти</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/accounts/login/">Войти</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endblock header %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+      {% block body %}
+      {% block content %}
+        {% if adverts %}
+          <h2>Объявления ({{ adverts|length }})</h2>
+          {% for advert in adverts %}
+            <hr>
+            <h3><a href="/adverts/{{ advert.id }}">{{ advert.header }}</a></h3>
+            <p>{{ advert.get_category_display }}</p>
+            <i>{{ advert.time|date:'d.m.Y' }}</i>
+            <p>{{ advert.content|truncatewords:20|safe }}</p>
+          {% endfor %}
+
+          {# Pagination #}
+          {% if page_obj.has_previous %}
+            <a href="?page=1">1</a>
+            {% if page_obj.previous_page_number != 1 %}
+              ...<a href="?page={{ page_obj.previous_page_number }}">
+                {{ page_obj.previous_page_number }}</a>
+            {% endif %}
+          {% endif %}
+          {{ page_obj.number }}
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">
+              {{ page_obj.next_page_number }}</a>
+            {% if paginator.num_pages != page_obj.next_page_number %}
+              ...
+              <a href="?page={{ page_obj.paginator.num_pages }}">
+                {{ page_obj.paginator.num_pages }}</a>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <h2>Объявлений нет!</h2>
+        {% endif %}
+      {% endblock content %}
+      {% endblock body %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

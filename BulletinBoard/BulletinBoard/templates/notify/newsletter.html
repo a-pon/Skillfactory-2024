@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новые объявления</title>
+</head>
+<body>
+  <h2>Здравствуй, {{ user }}. Новые объявления на сайте!</h2>
+  {% for advert in adverts %}
+    <h3>{{ advert.header }}</h3>
+    <p><a href="http://127.0.0.1:8000/responds/{{ respond.id }}">
+      {{ advert.content|truncatewords:20|safe }}</a></p>
+  {% endfor %}
+</body>
+</html>

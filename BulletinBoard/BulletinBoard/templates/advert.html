@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% block head_title %}{{ advert.header }}{% endblock head_title %}
+
+{% block content %}
+  {% if request.user.is_active and request.user.id == advert.author.id %}
+    <a href="/adverts/{{ advert.id }}/edit/">Редактировать</a>
+    <!--<a href="/adverts/{{ advert.id }}/delete/">Удалить</a>-->
+  {% endif %}
+
+  <h3>{{ advert.header }}</h3>
+  <p>{{ advert.get_category_display }}</p>
+  <i>{{ advert.time|date:'d.m.Y' }}</i>
+  <p>{{ advert.content|safe }}</p>
+
+  {% if request.user.is_active and request.user.id != advert.author.id %}
+    <a href="/adverts/{{ advert.id }}/respond/?advert_id={{ advert.id }}">Отправить отклик</a>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+
+{% block head_title %}Удаление объявления{% endblock head_title %}
+
+{% block content %}
+  <form action="" method="post">{% csrf_token %}
+    <h2><b>Удалить</b> "{{ object.header }}"?</h2>
+    <input type="submit" value="Удалить">
+  </form>
+{% endblock content %}

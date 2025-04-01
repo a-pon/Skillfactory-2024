@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+
+{% block head_title %}Создание отклика{% endblock head_title %}
+
+{% block content %}
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Сохранить">
+  </form>
+{% endblock content %}

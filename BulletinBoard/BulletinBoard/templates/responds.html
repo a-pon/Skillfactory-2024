@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+
+{% block head_title %}Отклики{% endblock head_title %}
+
+{% block content %}
+  {% if responds %}
+    <h2>Отклики ({{ responds|length }})</h2>
+    <form action="" method="get">
+      {{ filterset.form.as_p }}
+      <input type="submit" value="Найти">
+    </form>
+    {% for advert in adverts %}
+      <hr>
+      <h3><a href="/adverts/{{ advert.id }}">{{ advert.header }}</a></h3>
+      <p>{{ advert.get_category_display }}</p>
+      {% for respond in advert.respond_set.all %}
+        {% if respond.accepted %}<span>[ ПРИНЯТ ]</span>{% endif %}
+        <p>{{ respond.author }}</p>
+        <i>{{ respond.time|date:'d.m.Y' }}</i>
+        <p><a href="/responds/{{ respond.id }}">{{ respond.content|truncatewords:20 }}</a></p>
+      {% endfor %}
+    {% endfor %}
+
+    {# Pagination #}
+    {% if page_obj.has_previous %}
+      <a href="?page=1">1</a>
+      {% if page_obj.previous_page_number != 1 %}
+        ...<a href="?page={{ page_obj.previous_page_number }}">
+          {{ page_obj.previous_page_number }}</a>
+      {% endif %}
+    {% endif %}
+    {{ page_obj.number }}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">
+        {{ page_obj.next_page_number }}</a>
+      {% if paginator.num_pages != page_obj.next_page_number %}
+        ...
+        <a href="?page={{ page_obj.paginator.num_pages }}">
+          {{ page_obj.paginator.num_pages }}</a>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <h2>Откликов нет!</h2>
+  {% endif %}
+{% endblock content %}
